@@ -9,9 +9,13 @@ layer {
   #  scale: 0.00390625
   #}
   python_param {
-  	module: 'mnist_lmdb_layer.layer'
-  	layer: 'MnistLmdbDataLayer'
+  	module: 'mnist_lmdb_data_layer.layer'
+   	layer: 'MnistLmdbDataLayer'
   }
+  #python_param {
+  #	module: 'mnist_data_layer.layer'
+  #	layer: 'MnistDataLayer'
+  #}
 }
 layer {
   name: "conv1"

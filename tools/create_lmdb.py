@@ -46,7 +46,6 @@ def create_batch_lmdb(db, batch):
             db.set_mapsize(new_limit)
 
 def create_lmdb(lmdb_dir, label_filename):
-    
 
     if os.path.exists(lmdb_dir):
         # os.rmdir(train_lmdb_dir)
@@ -61,7 +60,7 @@ def create_lmdb(lmdb_dir, label_filename):
             label_id += 1
 
     ext = '.png'
-    cnt = 0
+    im_id = 0
     batch = {}
 
     db = lmdb.open(lmdb_dir, map_size=1048576)  # 1024*1024B = 1024K = 1M
@@ -70,22 +69,24 @@ def create_lmdb(lmdb_dir, label_filename):
         for line in f.readlines():
             im_name, label_str = line.strip().split(' ')
             im_path = im_name + ext
-            im = np.array(Image.open(im_path)) # dtype is uint8
-            im = im[:,:,np.newaxis]
+            # im = np.array(Image.open(im_path)) # dtype is uint8, len(shape)=2
+            # im = im[:,:,np.newaxis]
+            im = caffe.io.load_image(im_path, color=False) # dtype is float32
             # print('!! im.shape is', im.shape)
+            
             label = label_mapper[label_str]
             
             datum = make_datum_mnist(im, label)
-            keystr = '{:0>8d}'.format(cnt)
+            keystr = '{:0>8d}'.format(im_id)
             value = datum.SerializeToString()
             batch[keystr] = value
 
-            cnt += 1
-            if cnt%1000==0:
+            im_id += 1
+            if im_id%1000==0:
                 create_batch_lmdb(db, batch)
                 batch = {}
         
-        if cnt % 1000 != 0:
+        if im_id % 1000 != 0:
             create_batch_lmdb(db, batch)
 
     db.close()    

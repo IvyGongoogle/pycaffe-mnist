@@ -40,7 +40,7 @@ class SolverWrapper(object):
 		model_paths = []
 		while self.solver.iter < cfg.TRAIN.MAX_ITERS:
 			self.solver.step(1)
-			if self.solver.iter % cfg.TRAIN.SNAPSHOT_ITERS == 0:      # 暂时硬编码，每1000次迭代保存一个
+			if self.solver.iter % cfg.TRAIN.SNAPSHOT_ITERS == 0:
 				model_paths.append(self.snapshot())
 				last_snapshot_iter = self.solver.iter
 			predicted_labels = self.solver.net.blobs['ip2'].data[0].flatten()

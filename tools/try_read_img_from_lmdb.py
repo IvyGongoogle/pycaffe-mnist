@@ -38,16 +38,23 @@ def main():
 
 def main2():
     """
-    读取指定位置的某一张图
+    读取指定位置的某一张图：也就是根据某个key来找到对应的value
     """
     db = lmdb.open('train_lmdb')
     txn = db.begin()
     cursor = txn.cursor()
     datum = caffe_pb2.Datum()
 
-    print(len(cursor))
-    
-        
+    im_id = 0
+    keystr = '{:0>8d}'.format(im_id)
+    value = txn.get(keystr)
+    datum.ParseFromString(value)
+    label = datum.label
+    data = caffe.io.datum_to_array(datum)
+    image = np.transpose(data, (1,2,0))
+    cv2.imwrite('test.png', image)
+    print('{},{}'.format(keystr, label))
+
 
 if __name__ == '__main__':
     root_dir = cfg.META.ROOT_DIR

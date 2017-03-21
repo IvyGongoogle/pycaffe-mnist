@@ -22,8 +22,8 @@ __C.TRAIN.MAX_ITERS = 5000
 __C.TRAIN.BATCH_SIZE = 64
 
 # LMDB
-__C.TRAIN.TRAIN_LMDB = 'train_lmdb'
-__C.TRAIN.VAL_LMDB = 'test_lmdb'
+__C.TRAIN.TRAIN_LMDB = 'data/train_lmdb'
+__C.TRAIN.VAL_LMDB = 'data/test_lmdb'
 
 ## 数据集相关配置
 __C.DATASET = edict()
